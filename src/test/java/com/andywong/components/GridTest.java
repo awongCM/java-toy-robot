@@ -152,7 +152,7 @@ public class GridTest {
 
         // Act
         assertEquals("The robot will fall", exception.getMessage());
-        assertEquals(initialCoordinates, grid.getRobotDirection());
+        assertEquals(initialCoordinates, grid.getRobotLocation());
     }
 
     @Test
@@ -168,7 +168,7 @@ public class GridTest {
 
         // Act
         assertEquals("The robot will fall", exception.getMessage());
-        assertEquals(initialCoordinates, grid.getRobotDirection());
+        assertEquals(initialCoordinates, grid.getRobotLocation());
     }
 
     @Test
@@ -184,7 +184,7 @@ public class GridTest {
 
         // Act
         assertEquals("The robot will fall", exception.getMessage());
-        assertEquals(initialCoordinates, grid.getRobotDirection());
+        assertEquals(initialCoordinates, grid.getRobotLocation());
     }
 
     @Test
