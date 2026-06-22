@@ -32,3 +32,7 @@ mvn test
 - Java 21
 - Maven
 - JUnit 5
+
+## Historical notes
+
+For context on why the app and test suite were unreliable before the Phase 1 refactor (broken `mvn test`, flaky tests, `PLACE` parsing, IntelliJ-only run instructions), see [docs/HISTORICAL_NOTES.md](docs/HISTORICAL_NOTES.md).
