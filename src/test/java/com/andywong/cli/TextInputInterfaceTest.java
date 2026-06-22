@@ -1,7 +1,5 @@
 package com.andywong.cli;
 
-import com.andywong.components.Grid;
-import com.andywong.components.Robot;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,11 +21,12 @@ public class TextInputInterfaceTest {
 
     private TextInputInterface textInputInterface;
 
-    // TODO - need to investigate why running tests individually passes but failed when running
-    // together
+    // Tests reset shared singleton state before each run so the suite is order-independent.
 
     @BeforeEach
     public void beforeEach() {
+        TextInputInterface.resetForTesting();
+        outContent.reset();
         textInputInterface = new TextInputInterface();
     }
 

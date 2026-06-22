@@ -26,6 +26,15 @@ public class Grid {
         return _instance;
     }
 
+    public static void resetForTesting() {
+        _instance = null;
+        Robot.resetForTesting();
+    }
+
+    void clearState() {
+        robot.clearState();
+    }
+
     public void place(Location location, Direction direction) {
         if (location == null) {
             throw new IllegalArgumentException(NO_LOCATION_ERROR_MESSAGE);

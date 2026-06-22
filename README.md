@@ -5,15 +5,30 @@ Toy Robot Challenge
 
 ### Run the app
 
-1. Open up IntelliJ IDE -> right click java/com.andywong.cli/TextInputInferface ->Run TextInputfae
-2. Input the commands as this [link](https://github.com/ioof-holdings/recruitment/wiki/Robot-Challenge)
+From the project root:
+
+```bash
+mvn compile exec:java
+```
+
+Then enter commands (one per line) as described in the [Robot Challenge spec](https://github.com/luke-zhou/robot-challenge). End input with a blank line.
+
+Example:
+
+```
+PLACE 0,0,NORTH
+MOVE
+REPORT
+```
 
 ### Run tests
-* Open up IntelliJ IDE -> right click test/java folder -> Run Tests
 
+```bash
+mvn test
+```
 
 ## Environment
 
-- Java 20
+- Java 21
 - Maven
-- JUnit 4.13
+- JUnit 5

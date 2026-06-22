@@ -17,7 +17,12 @@ public class TextInputInterface {
     private static final int X_POSITION = 0;
     private static final int Y_POSITION = 1;
 
-    public static final Grid grid = Grid.getInstance();
+    private static Grid grid = Grid.getInstance();
+
+    static void resetForTesting() {
+        Grid.resetForTesting();
+        grid = Grid.getInstance();
+    }
 
     public TextInputInterface(){}
 
@@ -31,8 +36,8 @@ public class TextInputInterface {
 
             try{
                 runCommand(commandInput);
-            }catch (Exception e) {
-                System.out.println("something when wrong: " + e.toString());
+            } catch (Exception e) {
+                System.out.println("Something went wrong: " + e.getMessage());
             }
         }
     }
@@ -43,10 +48,14 @@ public class TextInputInterface {
             throw new IllegalArgumentException(INVALID_PLACE_PARAMETERS);
         }
 
-        String [] locationParams = paramsAsString.split(", ");
+        String[] locationParams = paramsAsString.split(",");
 
         if (locationParams.length != 3) {
             throw new IllegalArgumentException(INVALID_PLACE_PARAMETERS);
+        }
+
+        for (int i = 0; i < locationParams.length; i++) {
+            locationParams[i] = locationParams[i].trim();
         }
 
         Location location = getLocationFromParams(locationParams);
@@ -122,12 +131,10 @@ public class TextInputInterface {
 
         List<String> commands = new ArrayList<String>();
 
-        while ( !(line = scanner.nextLine()).isEmpty()) {
-
+        while (!(line = scanner.nextLine()).isEmpty()) {
             commands.add(line);
         }
 
-        System.out.println(commands);
         scanner.close();
 
         return  commands;
