@@ -14,6 +14,15 @@ public class Robot {
         return _instance;
     }
 
+    static void resetForTesting() {
+        _instance = null;
+    }
+
+    void clearState() {
+        location = null;
+        direction = null;
+    }
+
     public void setLocation(Location location) {
         this.location = location;
     }

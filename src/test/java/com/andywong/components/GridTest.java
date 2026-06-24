@@ -1,5 +1,7 @@
 package com.andywong.components;
 
+import com.andywong.components.Grid;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,8 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GridTest {
 
-    // TODO - need to investigate why running tests individually passes but failed when running
-    // together
+    @BeforeEach
+    void setUp() {
+        Grid.resetForTesting();
+    }
+
+    // Shared singleton state is reset before each test so the suite is order-independent.
     @Test
     void place_should_throw_IllegalArgumentException_when_no_coordinate_are_set() {
         // Arrange
