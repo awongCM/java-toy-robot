@@ -33,6 +33,7 @@ mvn test
 - Maven
 - JUnit 5
 
-## Historical notes
+## Documentation
 
-For context on why the app and test suite were unreliable before the Phase 1 refactor (broken `mvn test`, flaky tests, `PLACE` parsing, IntelliJ-only run instructions), see [docs/HISTORICAL_NOTES.md](docs/HISTORICAL_NOTES.md).
+- [Refactor roadmap](docs/REFACTOR_ROADMAP.md) — phased plan (Phase 1 done; Phases 2–4 pending)
+- [Historical notes](docs/HISTORICAL_NOTES.md) — why the app and test suite were unreliable before Phase 1
