@@ -48,18 +48,16 @@ public class TextInputInterfaceTest {
     }
 
     @Test
-    void runCommand_throw_exception_when_robot_have_not_been_placed() {
+    void runCommand_MOVE_beforePlace_isIgnored() {
         // Arrange
         String command = "move";
-        String [] commandInput = {command, null};
-        String expected = "The robot hasn't been placed";
+        String[] commandInput = {command, null};
 
         // Act
-        Throwable exception = assertThrows(IllegalStateException.class, () -> textInputInterface.runCommand(commandInput));
-
+        textInputInterface.runCommand(commandInput);
 
         // Assert
-        assertEquals(expected, exception.getMessage());
+        assertEquals("", outContent.toString());
     }
 
     @Test
@@ -161,6 +159,53 @@ public class TextInputInterfaceTest {
 
         // Assert
         assertEquals(expected, outContent.toString());
+    }
+
+    @Test
+    void runCommand_REPORT_beforePlace_printsNothing() {
+        // Arrange
+        String[] commandInput = {Command.REPORT.name(), null};
+
+        // Act
+        textInputInterface.runCommand(commandInput);
+
+        // Assert
+        assertEquals("", outContent.toString());
+    }
+
+    @Test
+    void runCommand_MOVE_offTable_isIgnored() {
+        // Arrange
+        String[] params = new String[]{"0", "0", "WEST"};
+        String[] placeInput = {Command.PLACE.name(), Arrays.toString(params).replace("[", "").replace("]", "")};
+        String[] moveInput = {Command.MOVE.name(), null};
+        String[] reportInput = {Command.REPORT.name(), null};
+
+        // Act
+        textInputInterface.runCommand(placeInput);
+        textInputInterface.runCommand(moveInput);
+        textInputInterface.runCommand(reportInput);
+
+        // Assert
+        assertEquals("0,0,WEST", outContent.toString().trim());
+    }
+
+    @Test
+    void runCommand_invalidPlace_isIgnored_thenValidPlaceWorks() {
+        // Arrange
+        String[] invalidParams = new String[]{"5", "5", "NORTH"};
+        String[] validParams = new String[]{"0", "0", "NORTH"};
+        String[] invalidPlace = {Command.PLACE.name(), Arrays.toString(invalidParams).replace("[", "").replace("]", "")};
+        String[] validPlace = {Command.PLACE.name(), Arrays.toString(validParams).replace("[", "").replace("]", "")};
+        String[] reportInput = {Command.REPORT.name(), null};
+
+        // Act
+        textInputInterface.runCommand(invalidPlace);
+        textInputInterface.runCommand(validPlace);
+        textInputInterface.runCommand(reportInput);
+
+        // Assert
+        assertEquals("0,0,NORTH", outContent.toString().trim());
     }
 
     @Test

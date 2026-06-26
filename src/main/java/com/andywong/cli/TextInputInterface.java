@@ -1,5 +1,6 @@
 package com.andywong.cli;
 
+import com.andywong.application.RobotSimulator;
 import com.andywong.components.Direction;
 import com.andywong.components.Grid;
 import com.andywong.components.Location;
@@ -18,10 +19,12 @@ public class TextInputInterface {
     private static final int Y_POSITION = 1;
 
     private static Grid grid = Grid.getInstance();
+    private static RobotSimulator simulator = new RobotSimulator(grid);
 
     static void resetForTesting() {
         Grid.resetForTesting();
         grid = Grid.getInstance();
+        simulator = new RobotSimulator(grid);
     }
 
     public TextInputInterface(){}
@@ -60,13 +63,11 @@ public class TextInputInterface {
 
         Location location = getLocationFromParams(locationParams);
         Direction direction = Direction.find(locationParams[DIRECTION_POSITION]);
-        grid.place(location, direction);
+        simulator.place(location, direction);
     }
 
     private static void reportRobotPosition() {
-        String robotPosition = grid.report();
-
-        System.out.println(robotPosition);
+        simulator.report().ifPresent(System.out::println);
     }
 
     public static void runCommand(String [] commandInput) {
@@ -79,13 +80,13 @@ public class TextInputInterface {
                 placePosition(commandInput[1]);
                 break;
             case MOVE:
-                grid.move();
+                simulator.move();
                 break;
             case LEFT:
-                grid.left();
+                simulator.left();
                 break;
             case RIGHT:
-                grid.right();
+                simulator.right();
                 break;
             case REPORT:
                 reportRobotPosition();
