@@ -11,13 +11,13 @@ For background on **why** Phase 1 was needed, see [HISTORICAL_NOTES.md](HISTORIC
 | Phase | Focus | Status |
 |-------|-------|--------|
 | [Phase 1](#phase-1--quick-wins) | Build tooling, parsing, test isolation | **Done** |
-| [Phase 2](#phase-2--spec-aligned-behavior) | Challenge spec compliance, integration tests, file input | Pending |
-| [Phase 3](#phase-3--clean-architecture) | Remove singletons, separate concerns, domain cleanup | Pending |
+| [Phase 2](#phase-2--spec-aligned-behavior) | Challenge spec compliance, integration tests, file input | **Done** |
+| [Phase 3](#phase-3--clean-architecture) | Remove singletons, separate concerns, domain cleanup | **Next** |
 | [Phase 4](#phase-4--polish) | Optional hardening, CI, edge-case coverage | Pending |
 
 **Recommended order:** Phase 1 → Phase 2 → Phase 3 → Phase 4 (optional).
 
-Phase 2 can ship independently of Phase 3. Phase 3 is the larger structural refactor and should follow once behavior is spec-correct and well tested.
+Phase 3 is the larger structural refactor. Spec behavior and integration tests are now locked in via Phase 2 — proceed with confidence.
 
 ---
 
@@ -48,43 +48,33 @@ mvn test
 # Tests run: 39, Failures: 0, Errors: 0, Skipped: 0
 ```
 
-### Explicitly deferred
-
-Phase 1 intentionally did **not** change:
-
-- Singleton architecture (`Grid.getInstance()`, `Robot.getInstance()`)
-- Exception-throwing behavior for invalid moves or pre-`PLACE` commands
-- File-based input
-- Domain model cleanup (`Location`, `hashCode`, injectable table size)
-
 ---
 
 ## Phase 2 — Spec-aligned behavior
 
-**Status:** In progress (slice 3c: file input — PR pending)
+**Status:** Done (PRs [#4](https://github.com/awongCM/java-toy-robot/pull/4), [#5](https://github.com/awongCM/java-toy-robot/pull/5), [#6](https://github.com/awongCM/java-toy-robot/pull/6))
 
 **Goal:** Align runtime behavior with the [Robot Challenge spec](https://github.com/luke-zhou/robot-challenge) and add confidence through integration tests and file input.
 
-### Planned items
+### Completed items
 
-- [x] **Ignore commands before first valid `PLACE`** (slice 3a)
-  - `MOVE`, `LEFT`, `RIGHT`, and `REPORT` should be no-ops until the robot is placed
+- [x] **Ignore commands before first valid `PLACE`**
+  - `MOVE`, `LEFT`, `RIGHT`, and `REPORT` are no-ops until the robot is placed
   - Implemented via `RobotSimulator` — catches `IllegalStateException` from `Grid`
 
-- [x] **Ignore moves that would fall off the table** (slice 3a)
-  - Invalid moves should be silently ignored; robot position unchanged
-  - Implemented via `RobotSimulator`
+- [x] **Ignore moves that would fall off the table**
+  - Invalid moves are silently ignored; robot position unchanged
 
-- [x] **Ignore invalid `PLACE` commands** (slice 3a)
-  - Out-of-bounds or malformed placement should be ignored (not throw)
-  - Valid `PLACE` after an invalid one should still work
+- [x] **Ignore invalid `PLACE` commands**
+  - Out-of-bounds placement is ignored (not thrown)
+  - Valid `PLACE` after an invalid one still works
   - Parser-level malformed input still throws; out-of-bounds ignored by simulator
 
-- [x] **Update existing tests** to reflect spec-aligned behavior (slice 3a)
-  - `RobotSimulatorTest` and updated `TextInputInterfaceTest`
-  - `GridTest` unchanged — domain layer still throws internally
+- [x] **Update tests** for spec-aligned behavior
+  - `RobotSimulatorTest`, `RobotSimulatorIntegrationTest`, updated `TextInputInterfaceTest`
+  - `GridTest` unchanged — domain layer still throws internally (bridge until Phase 3)
 
-- [x] **Add canonical integration tests** for the three official examples (slice 3b):
+- [x] **Canonical integration tests** for the three official examples:
 
   | Input | Expected output |
   |-------|-----------------|
@@ -92,43 +82,79 @@ Phase 1 intentionally did **not** change:
   | `PLACE 0,0,NORTH` → `LEFT` → `REPORT` | `0,0,WEST` |
   | `PLACE 1,2,EAST` → `MOVE` → `MOVE` → `LEFT` → `MOVE` → `REPORT` | `3,3,NORTH` |
 
-- [x] **Support file-based input** (slice 3c)
+- [x] **File-based input**
   - Read commands from a file path argument (e.g. `commands.txt`)
   - Fall back to stdin when no file is provided
   - Example: `mvn compile exec:java -Dexec.args="commands.txt"`
 
-- [x] **Clarify `REPORT` when robot is not placed** (slice 3a)
+- [x] **`REPORT` when robot is not placed**
   - Silent no-op: `RobotSimulator.report()` returns empty; CLI prints nothing
 
-### Suggested approach
+### What Phase 2 delivered
 
-Introduce a thin **simulator/orchestrator** layer that interprets commands according to the spec, even if the underlying `Grid` methods still throw internally at first. This keeps Phase 2 changes localized before the Phase 3 structural refactor.
+- `com.andywong.application.RobotSimulator` — thin orchestrator enforcing spec semantics
+- `TextInputInterface` wired through the simulator for all movement/placement commands
+- File and stdin input paths with consistent blank-line termination
 
-### Acceptance criteria
+### Explicitly deferred to Phase 3
 
-- All canonical examples pass
-- `mvn test` green with updated behavior tests
-- App runs against `commands.txt` and produces expected output
-- No regressions in Phase 1 tooling (`mvn test`, `mvn compile exec:java`)
+- Removing singletons (`Grid.getInstance()`, `Robot.getInstance()`)
+- `resetForTesting()` workarounds
+- Package restructure (`components/` → `domain/`, dedicated `cli/` parser)
+- Domain cleanup (`Location` → `Position`, `int` coordinates, `hashCode`, injectable table size)
+- `CommandParser` extraction and `Arrays.toString()` parameter round-trip removal
+
+### Verification
+
+```bash
+mvn test
+# Tests run: 56, Failures: 0, Errors: 0, Skipped: 0
+
+mvn compile exec:java -Dexec.args="commands.txt"
+# File input works; REPORT prints expected output
+```
 
 ---
 
 ## Phase 3 — Clean architecture
 
-**Status:** Pending
+**Status:** Pending — **next up**
 
 **Goal:** Restructure the codebase for maintainability, testability, and interview/portfolio quality — without singletons or mixed responsibilities.
 
+### Current state (before refactor)
+
+| Area | Today | Target |
+|------|-------|--------|
+| Domain | `com.andywong.components` (`Grid`, `Robot`, `Location`, `Direction`) | `com.andywong.domain` (`Table`, `Robot`, `Position`, `Direction`) |
+| Application | `RobotSimulator` depends on singleton `Grid` | `RobotSimulator` receives `Table` via constructor |
+| CLI | `TextInputInterface` parses, prints, and orchestrates | `CommandParser` + thin `App` / `TextInputInterface` |
+| Tests | `resetForTesting()` in `@BeforeEach` | Fresh instances per test, no static state |
+
+### Suggested slices
+
+Phase 3 can ship as incremental PRs (similar to Phase 2):
+
+| Slice | Focus | Depends on |
+|-------|-------|------------|
+| **3a** | Remove singletons; constructor injection for `Table` + `Robot` | — |
+| **3b** | Move classes to `domain/`, `application/`, `cli/` packages | 3a |
+| **3c** | Domain cleanup (`Position`, `int` coords, `hashCode`, injectable table size) | 3b |
+| **3d** | Extract `CommandParser`; remove `Arrays.toString()` round-trip | 3b |
+| **3e** | Reorganize tests to mirror packages; remove `resetForTesting()` | 3a–3d |
+
+Slices **3a** and **3d** can start in parallel once the injection points from 3a are defined. **3b** should land before **3c** and **3d**.
+
 ### Planned items
 
-#### Remove singletons
+#### Remove singletons (slice 3a)
 
 - [ ] Remove `Robot.getInstance()` and `Grid.getInstance()`
 - [ ] Use constructor injection: `new Table(width, height, new Robot())`
 - [ ] Remove `resetForTesting()` workarounds (no longer needed)
 - [ ] Each test creates a fresh simulator/table instance
 
-#### Separate concerns
+#### Separate concerns (slice 3b)
 
 - [ ] **Domain layer** — pure logic, no I/O
   - `Direction` (enum)
@@ -144,13 +170,13 @@ Introduce a thin **simulator/orchestrator** layer that interprets commands accor
   - `CommandParser` (string → typed command)
   - `App` / `TextInputInterface` (stdin or file input)
 
-#### Domain cleanup
+#### Domain cleanup (slice 3c)
 
 - [ ] Rename `Location` → `Position`
 - [ ] Use `int` for x/y instead of `Integer` (eliminate null-coordinate guards)
 - [ ] Fix `Location.hashCode()` to match `equals()` (currently uses `super.hashCode()`)
 - [ ] Make table size injectable/configurable (default 5×5)
-- [ ] Remove awkward `Arrays.toString()` round-trip in command parameter handling
+- [ ] Remove awkward `Arrays.toString()` round-trip in command parameter handling (slice 3d)
 
 #### Target package layout
 
@@ -170,12 +196,19 @@ com.andywong
 └── (tests mirror the above)
 ```
 
-#### Test reorganization
+#### Test reorganization (slice 3e)
 
 - [ ] Mirror package structure in test directory
 - [ ] Unit tests for domain (no CLI dependencies)
 - [ ] Integration tests for simulator + canonical examples
 - [ ] Thin CLI smoke tests only
+
+### Suggested approach
+
+1. Introduce `Table` as a non-singleton alongside existing `Grid`, wire `RobotSimulator` to accept it via constructor, and migrate tests.
+2. Delete singletons and `resetForTesting()` once all call sites use injection.
+3. Move/rename packages in one focused PR to avoid half-old, half-new import paths lingering.
+4. Run the Phase 2 integration tests after every slice — they are the behavior safety net.
 
 ### Acceptance criteria
 
@@ -226,9 +259,20 @@ com.andywong
 
 ---
 
-## Architecture target (end state)
+## Architecture
 
-After Phase 3 and 4, the flow should look like this:
+### Current (after Phase 2)
+
+```mermaid
+flowchart LR
+    Input[stdin or file] --> CLI[TextInputInterface]
+    CLI --> Simulator[RobotSimulator]
+    Simulator --> Grid[Grid singleton]
+    Grid --> Robot[Robot singleton]
+    Simulator --> Output[REPORT output]
+```
+
+### Target (after Phase 3 and 4)
 
 ```mermaid
 flowchart LR
@@ -254,6 +298,7 @@ flowchart LR
 ## Notes for contributors
 
 - **Prefer incremental PRs** — one phase (or a logical slice of a phase) per PR
-- **Keep tests green** — update assertions when behavior intentionally changes (especially Phase 2)
-- **Do not skip Phase 2** before Phase 3 unless you accept rework — spec behavior should be locked in before restructuring packages
-- Phase 1's `resetForTesting()` helpers are a bridge; remove them in Phase 3 when singletons are gone
+- **Keep tests green** — run `mvn test` after every slice; Phase 2 integration tests are the behavior contract
+- **Phase 2 is complete** — do not change spec semantics during Phase 3 unless intentional
+- **Remove bridge code in Phase 3** — `resetForTesting()`, singletons, and `Grid` throwing internally should all go
+- **Worktrees work well for Phase 3** — parallel slices (e.g. 3a singleton removal + 3d parser extraction) with sequential merge order

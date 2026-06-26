@@ -151,6 +151,6 @@ The project also listed `junit:junit:4.13.2` alongside `junit-jupiter:RELEASE`, 
 
 ## References
 
-- [Refactor roadmap](REFACTOR_ROADMAP.md) — phased plan including Phase 1 (done) and Phases 2–4 (pending)
+- [Refactor roadmap](REFACTOR_ROADMAP.md) — phased plan; Phase 1–2 done, Phase 3 next
 - [Robot Challenge spec (community mirror)](https://github.com/luke-zhou/robot-challenge)
 - Phase 1 PR: https://github.com/awongCM/java-toy-robot/pull/2
