@@ -8,31 +8,18 @@ public class Grid {
     private static final String INVALID_LOCATION_ERROR_MESSAGE = "Location provided is invalid";
     private static final String NO_DIRECTION_ERROR_MESSAGE = "No direction is set";
 
-    private final static int GRID_HEIGHT = 5;
-    private final static int GRID_WIDTH = 5;
+    private static final int GRID_HEIGHT = 5;
+    private static final int GRID_WIDTH = 5;
     private static final int LOCATION_MIN_VALUE = 0;
-    
 
-    private static Grid _instance = null;
-    private Robot robot;
+    private final Robot robot;
+
     public Grid() {
-        robot = Robot.getInstance();
+        this(new Robot());
     }
 
-    public static Grid getInstance() {
-        if (_instance == null) {
-            _instance = new Grid();
-        }
-        return _instance;
-    }
-
-    public static void resetForTesting() {
-        _instance = null;
-        Robot.resetForTesting();
-    }
-
-    void clearState() {
-        robot.clearState();
+    public Grid(Robot robot) {
+        this.robot = robot;
     }
 
     public void place(Location location, Direction direction) {

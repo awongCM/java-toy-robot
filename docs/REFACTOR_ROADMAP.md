@@ -11,8 +11,8 @@ For background on **why** Phase 1 was needed, see [HISTORICAL_NOTES.md](HISTORIC
 | Phase | Focus | Status |
 |-------|-------|--------|
 | [Phase 1](#phase-1--quick-wins) | Build tooling, parsing, test isolation | **Done** |
-| [Phase 2](#phase-2--spec-aligned-behavior) | Challenge spec compliance, integration tests, file input | Pending |
-| [Phase 3](#phase-3--clean-architecture) | Remove singletons, separate concerns, domain cleanup | Pending |
+| [Phase 2](#phase-2--spec-aligned-behavior) | Challenge spec compliance, integration tests, file input | **Done** |
+| [Phase 3](#phase-3--clean-architecture) | Remove singletons, separate concerns, domain cleanup | **In progress** (slice 3a done) |
 | [Phase 4](#phase-4--polish) | Optional hardening, CI, edge-case coverage | Pending |
 
 **Recommended order:** Phase 1 → Phase 2 → Phase 3 → Phase 4 (optional).
@@ -61,7 +61,7 @@ Phase 1 intentionally did **not** change:
 
 ## Phase 2 — Spec-aligned behavior
 
-**Status:** In progress (slice 3c: file input — PR pending)
+**Status:** Done (PRs [#4](https://github.com/awongCM/java-toy-robot/pull/4), [#5](https://github.com/awongCM/java-toy-robot/pull/5), [#6](https://github.com/awongCM/java-toy-robot/pull/6))
 
 **Goal:** Align runtime behavior with the [Robot Challenge spec](https://github.com/luke-zhou/robot-challenge) and add confidence through integration tests and file input.
 
@@ -106,27 +106,37 @@ Introduce a thin **simulator/orchestrator** layer that interprets commands accor
 
 ### Acceptance criteria
 
-- All canonical examples pass
-- `mvn test` green with updated behavior tests
-- App runs against `commands.txt` and produces expected output
-- No regressions in Phase 1 tooling (`mvn test`, `mvn compile exec:java`)
+- [x] All canonical examples pass
+- [x] `mvn test` green with updated behavior tests (56 tests)
+- [x] App runs against `commands.txt` and produces expected output
+- [x] No regressions in Phase 1 tooling (`mvn test`, `mvn compile exec:java`)
 
 ---
 
 ## Phase 3 — Clean architecture
 
-**Status:** Pending
+**Status:** In progress (slice 3a done — PR pending)
 
 **Goal:** Restructure the codebase for maintainability, testability, and interview/portfolio quality — without singletons or mixed responsibilities.
 
+### Suggested slices
+
+| Slice | Focus | Status |
+|-------|-------|--------|
+| **3a** | Remove singletons; constructor injection | **Done** |
+| **3b** | Move classes to `domain/`, `application/`, `cli/` packages | Pending |
+| **3c** | Domain cleanup (`Position`, `int` coords, `hashCode`, table size) | Pending |
+| **3d** | Extract `CommandParser`; remove `Arrays.toString()` round-trip | Pending |
+| **3e** | Reorganize tests to mirror packages | Pending |
+
 ### Planned items
 
-#### Remove singletons
+#### Remove singletons (slice 3a)
 
-- [ ] Remove `Robot.getInstance()` and `Grid.getInstance()`
-- [ ] Use constructor injection: `new Table(width, height, new Robot())`
-- [ ] Remove `resetForTesting()` workarounds (no longer needed)
-- [ ] Each test creates a fresh simulator/table instance
+- [x] Remove `Robot.getInstance()` and `Grid.getInstance()`
+- [x] Use constructor injection: `new Grid(new Robot())`
+- [x] Remove `resetForTesting()` workarounds (no longer needed)
+- [x] Each test creates a fresh simulator/table instance
 
 #### Separate concerns
 
@@ -255,5 +265,6 @@ flowchart LR
 
 - **Prefer incremental PRs** — one phase (or a logical slice of a phase) per PR
 - **Keep tests green** — update assertions when behavior intentionally changes (especially Phase 2)
-- **Do not skip Phase 2** before Phase 3 unless you accept rework — spec behavior should be locked in before restructuring packages
-- Phase 1's `resetForTesting()` helpers are a bridge; remove them in Phase 3 when singletons are gone
+- **Phase 2 is complete** — integration tests are the behavior contract during Phase 3
+- **Slice 3a removed singletons** — `resetForTesting()` is gone; use fresh instances per test
+- **Next slices:** 3b (package moves), then 3c/3d in parallel, then 3e

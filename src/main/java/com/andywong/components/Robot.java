@@ -5,23 +5,7 @@ public class Robot {
     private Direction direction;
     private Location location;
 
-    private static Robot _instance;
-    protected Robot() {}
-    public static Robot getInstance() {
-        if (_instance == null) {
-            _instance = new Robot();
-        }
-        return _instance;
-    }
-
-    static void resetForTesting() {
-        _instance = null;
-    }
-
-    void clearState() {
-        location = null;
-        direction = null;
-    }
+    public Robot() {}
 
     public void setLocation(Location location) {
         this.location = location;

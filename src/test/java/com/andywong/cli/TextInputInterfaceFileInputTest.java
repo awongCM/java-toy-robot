@@ -25,7 +25,6 @@ class TextInputInterfaceFileInputTest {
 
     @BeforeEach
     void setUp() {
-        TextInputInterface.resetForTesting();
         outContent.reset();
     }
 

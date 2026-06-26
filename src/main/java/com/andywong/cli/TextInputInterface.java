@@ -4,6 +4,7 @@ import com.andywong.application.RobotSimulator;
 import com.andywong.components.Direction;
 import com.andywong.components.Grid;
 import com.andywong.components.Location;
+import com.andywong.components.Robot;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,19 +22,18 @@ public class TextInputInterface {
     private static final int X_POSITION = 0;
     private static final int Y_POSITION = 1;
 
-    private static Grid grid = Grid.getInstance();
-    private static RobotSimulator simulator = new RobotSimulator(grid);
+    private final RobotSimulator simulator;
 
-    static void resetForTesting() {
-        Grid.resetForTesting();
-        grid = Grid.getInstance();
-        simulator = new RobotSimulator(grid);
+    public TextInputInterface() {
+        this(new RobotSimulator(new Grid(new Robot())));
     }
 
-    public TextInputInterface(){}
+    public TextInputInterface(RobotSimulator simulator) {
+        this.simulator = simulator;
+    }
 
     public static void main(String[] args) {
-
+        TextInputInterface app = new TextInputInterface();
         List<String> commands = getCommands(args);
 
         for (String command: commands) {
@@ -41,14 +41,14 @@ public class TextInputInterface {
             String [] commandInput = getCommandWithOrWithoutParams(commandlineAsArray);
 
             try{
-                runCommand(commandInput);
+                app.runCommand(commandInput);
             } catch (Exception e) {
                 System.out.println("Something went wrong: " + e.getMessage());
             }
         }
     }
 
-    private static void placePosition(String paramsAsString) {
+    private void placePosition(String paramsAsString) {
 
         if (paramsAsString == null) {
             throw new IllegalArgumentException(INVALID_PLACE_PARAMETERS);
@@ -69,11 +69,11 @@ public class TextInputInterface {
         simulator.place(location, direction);
     }
 
-    private static void reportRobotPosition() {
+    private void reportRobotPosition() {
         simulator.report().ifPresent(System.out::println);
     }
 
-    public static void runCommand(String [] commandInput) {
+    public void runCommand(String [] commandInput) {
         String commandOnly = commandInput[0];
 
         Command command = Command.matchAndReturnValidCommand(commandOnly);

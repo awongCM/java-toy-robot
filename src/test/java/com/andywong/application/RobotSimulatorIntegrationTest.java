@@ -1,6 +1,7 @@
 package com.andywong.application;
 
 import com.andywong.components.Grid;
+import com.andywong.components.Robot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +18,7 @@ class RobotSimulatorIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        Grid.resetForTesting();
-        simulator = new RobotSimulator(new Grid());
+        simulator = new RobotSimulator(new Grid(new Robot()));
     }
 
     @Test

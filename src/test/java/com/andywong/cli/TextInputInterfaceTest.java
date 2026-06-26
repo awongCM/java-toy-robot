@@ -21,11 +21,8 @@ public class TextInputInterfaceTest {
 
     private TextInputInterface textInputInterface;
 
-    // Tests reset shared singleton state before each run so the suite is order-independent.
-
     @BeforeEach
     public void beforeEach() {
-        TextInputInterface.resetForTesting();
         outContent.reset();
         textInputInterface = new TextInputInterface();
     }

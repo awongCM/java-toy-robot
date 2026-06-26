@@ -3,6 +3,7 @@ package com.andywong.application;
 import com.andywong.components.Direction;
 import com.andywong.components.Grid;
 import com.andywong.components.Location;
+import com.andywong.components.Robot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RobotSimulatorTest {
 
-    private Grid grid;
     private RobotSimulator simulator;
 
     @BeforeEach
     void setUp() {
-        Grid.resetForTesting();
-        grid = new Grid();
-        simulator = new RobotSimulator(grid);
+        simulator = new RobotSimulator(new Grid(new Robot()));
     }
 
     @Test
