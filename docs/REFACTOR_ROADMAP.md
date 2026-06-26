@@ -84,7 +84,7 @@ Phase 1 intentionally did **not** change:
   - `RobotSimulatorTest` and updated `TextInputInterfaceTest`
   - `GridTest` unchanged — domain layer still throws internally
 
-- [ ] **Add canonical integration tests** for the three official examples (slice 3b):
+- [x] **Add canonical integration tests** for the three official examples (slice 3b):
 
   | Input | Expected output |
   |-------|-----------------|
