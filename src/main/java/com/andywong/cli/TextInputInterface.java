@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -36,21 +35,46 @@ public class TextInputInterface {
         TextInputInterface app = new TextInputInterface();
         List<String> commands = getCommands(args);
 
-        for (String command: commands) {
-            String [] commandlineAsArray = command.trim().split(" ");
-            String [] commandInput = getCommandWithOrWithoutParams(commandlineAsArray);
-
-            try{
-                app.runCommand(commandInput);
+        for (String commandLine : commands) {
+            try {
+                app.runCommand(commandLine);
             } catch (Exception e) {
                 System.out.println("Something went wrong: " + e.getMessage());
             }
         }
     }
 
+    public void runCommand(String commandLine) {
+        runCommand(CommandParser.parse(commandLine));
+    }
+
+    public void runCommand(CommandParser.ParsedCommand parsedCommand) {
+        Command command = parsedCommand.command();
+
+        switch (command) {
+            case PLACE:
+                placePosition(parsedCommand.placeParameters());
+                break;
+            case MOVE:
+                simulator.move();
+                break;
+            case LEFT:
+                simulator.left();
+                break;
+            case RIGHT:
+                simulator.right();
+                break;
+            case REPORT:
+                reportRobotPosition();
+                break;
+            default:
+                throw new RuntimeException("unknown command detected");
+        }
+    }
+
     private void placePosition(String paramsAsString) {
 
-        if (paramsAsString == null) {
+        if (paramsAsString == null || paramsAsString.isBlank()) {
             throw new IllegalArgumentException(INVALID_PLACE_PARAMETERS);
         }
 
@@ -73,32 +97,6 @@ public class TextInputInterface {
         simulator.report().ifPresent(System.out::println);
     }
 
-    public void runCommand(String [] commandInput) {
-        String commandOnly = commandInput[0];
-
-        Command command = Command.matchAndReturnValidCommand(commandOnly);
-
-        switch (command) {
-            case PLACE:
-                placePosition(commandInput[1]);
-                break;
-            case MOVE:
-                simulator.move();
-                break;
-            case LEFT:
-                simulator.left();
-                break;
-            case RIGHT:
-                simulator.right();
-                break;
-            case REPORT:
-                reportRobotPosition();
-                break;
-            default:
-                throw new RuntimeException("unknown command detected");
-        }
-    }
-
     private static Position getPositionFromParams(String [] params) {
         int x;
         int y;
@@ -113,20 +111,6 @@ public class TextInputInterface {
         return new Position(x, y);
 
     }
-
-    private static String[] getCommandWithOrWithoutParams(String[] commandlineAsArray) {
-
-        String command =  commandlineAsArray[0];
-
-        String[] params = commandlineAsArray.length < 2 ? null : commandlineAsArray[1].split(",");
-
-        String [] commandInput = {command , Arrays.toString(params)
-                .replace("[","").replace("]","")};
-
-        return commandInput;
-
-    }
-
 
     private static List<String> getCommands(String[] args) {
         if (args != null && args.length > 0 && args[0] != null && !args[0].isBlank()) {
