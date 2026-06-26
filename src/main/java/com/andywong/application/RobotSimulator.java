@@ -1,7 +1,7 @@
 package com.andywong.application;
 
 import com.andywong.domain.Direction;
-import com.andywong.domain.Location;
+import com.andywong.domain.Position;
 import com.andywong.domain.Table;
 
 import java.util.Optional;
@@ -18,9 +18,9 @@ public class RobotSimulator {
         this.table = table;
     }
 
-    public void place(Location location, Direction direction) {
+    public void place(Position position, Direction direction) {
         try {
-            table.place(location, direction);
+            table.place(position, direction);
         } catch (IllegalArgumentException e) {
             // Out-of-bounds or otherwise invalid placement — ignore per spec
         }

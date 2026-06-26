@@ -3,12 +3,12 @@ package com.andywong.domain;
 public class Robot {
 
     private Direction direction;
-    private Location location;
+    private Position position;
 
     public Robot() {}
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public void setDirection(Direction direction) {
@@ -19,12 +19,12 @@ public class Robot {
         return direction;
     }
 
-    public Location getLocation() {
-        return location;
+    public Position getPosition() {
+        return position;
     }
 
     @Override
     public String toString() {
-        return location.getX() + "," + location.getY() + "," + direction.name();
+        return position.x() + "," + position.y() + "," + direction.name();
     }
 }

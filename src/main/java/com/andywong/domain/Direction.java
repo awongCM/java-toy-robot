@@ -1,12 +1,12 @@
 package com.andywong.domain;
 
 public enum Direction {
-    NORTH(new Location(0, 1)),
-    EAST(new Location(1, 0)),
-    SOUTH(new Location(0, -1)),
-    WEST(new Location(-1, 0));
+    NORTH(new Position(0, 1)),
+    EAST(new Position(1, 0)),
+    SOUTH(new Position(0, -1)),
+    WEST(new Position(-1, 0));
 
-    private final Location delta;
+    private final Position delta;
 
     private Direction left;
 
@@ -26,7 +26,7 @@ public enum Direction {
         WEST.right = NORTH;
     }
 
-    Direction(Location delta) {
+    Direction(Position delta) {
         this.delta = delta;
     }
 
@@ -38,10 +38,8 @@ public enum Direction {
         return right;
     }
 
-    public Location moveTowards(Location location) {
-        int newX = location.getX() + delta.getX();
-        int newY = location.getY() + delta.getY();
-        return new Location(newX, newY);
+    public Position moveTowards(Position position) {
+        return new Position(position.x() + delta.x(), position.y() + delta.y());
     }
 
     public static Direction find(String stringDirection) {

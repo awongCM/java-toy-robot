@@ -2,7 +2,7 @@ package com.andywong.cli;
 
 import com.andywong.application.RobotSimulator;
 import com.andywong.domain.Direction;
-import com.andywong.domain.Location;
+import com.andywong.domain.Position;
 import com.andywong.domain.Robot;
 import com.andywong.domain.Table;
 
@@ -64,9 +64,9 @@ public class TextInputInterface {
             locationParams[i] = locationParams[i].trim();
         }
 
-        Location location = getLocationFromParams(locationParams);
+        Position position = getPositionFromParams(locationParams);
         Direction direction = Direction.find(locationParams[DIRECTION_POSITION]);
-        simulator.place(location, direction);
+        simulator.place(position, direction);
     }
 
     private void reportRobotPosition() {
@@ -99,18 +99,18 @@ public class TextInputInterface {
         }
     }
 
-    private static Location getLocationFromParams(String [] params) {
-        Integer x;
-        Integer y;
+    private static Position getPositionFromParams(String [] params) {
+        int x;
+        int y;
 
         try{
-            x = Integer.valueOf(params[X_POSITION]);
-            y = Integer.valueOf(params[Y_POSITION]);
+            x = Integer.parseInt(params[X_POSITION]);
+            y = Integer.parseInt(params[Y_POSITION]);
         }catch(NumberFormatException e) {
             throw new IllegalArgumentException(INVALID_LOCATION_PARAMETERS);
         }
 
-        return new Location(x, y);
+        return new Position(x, y);
 
     }
 

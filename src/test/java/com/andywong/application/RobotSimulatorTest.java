@@ -1,7 +1,7 @@
 package com.andywong.application;
 
 import com.andywong.domain.Direction;
-import com.andywong.domain.Location;
+import com.andywong.domain.Position;
 import com.andywong.domain.Robot;
 import com.andywong.domain.Table;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,27 +46,27 @@ class RobotSimulatorTest {
 
     @Test
     void move_offTable_isIgnored() {
-        simulator.place(new Location(0, 0), Direction.WEST);
+        simulator.place(new Position(0, 0), Direction.WEST);
         simulator.move();
         assertEquals(Optional.of("0,0,WEST"), simulator.report());
     }
 
     @Test
     void invalidPlace_isIgnored() {
-        simulator.place(new Location(5, 5), Direction.NORTH);
+        simulator.place(new Position(5, 5), Direction.NORTH);
         assertEquals(Optional.empty(), simulator.report());
     }
 
     @Test
     void validPlace_afterInvalidPlace_succeeds() {
-        simulator.place(new Location(5, 5), Direction.NORTH);
-        simulator.place(new Location(0, 0), Direction.NORTH);
+        simulator.place(new Position(5, 5), Direction.NORTH);
+        simulator.place(new Position(0, 0), Direction.NORTH);
         assertEquals(Optional.of("0,0,NORTH"), simulator.report());
     }
 
     @Test
     void move_afterValidPlace_updatesPosition() {
-        simulator.place(new Location(0, 0), Direction.NORTH);
+        simulator.place(new Position(0, 0), Direction.NORTH);
         simulator.move();
         assertEquals(Optional.of("0,1,NORTH"), simulator.report());
     }
