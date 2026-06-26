@@ -61,7 +61,7 @@ Phase 1 intentionally did **not** change:
 
 ## Phase 2 — Spec-aligned behavior
 
-**Status:** In progress (slice 3a: behavior — PR pending)
+**Status:** In progress (slice 3c: file input — PR pending)
 
 **Goal:** Align runtime behavior with the [Robot Challenge spec](https://github.com/luke-zhou/robot-challenge) and add confidence through integration tests and file input.
 
@@ -92,7 +92,11 @@ Phase 1 intentionally did **not** change:
   | `PLACE 0,0,NORTH` → `LEFT` → `REPORT` | `0,0,WEST` |
   | `PLACE 1,2,EAST` → `MOVE` → `MOVE` → `LEFT` → `MOVE` → `REPORT` | `3,3,NORTH` |
 
+<<<<<<< HEAD
 - [ ] **Support file-based input** (slice 3c)
+=======
+- [x] **Support file-based input** (slice 3c)
+>>>>>>> ae06955 (Phase 2 slice 3c: file-based command input)
   - Read commands from a file path argument (e.g. `commands.txt`)
   - Fall back to stdin when no file is provided
   - Example: `mvn compile exec:java -Dexec.args="commands.txt"`

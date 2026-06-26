@@ -5,6 +5,9 @@ import com.andywong.components.Direction;
 import com.andywong.components.Grid;
 import com.andywong.components.Location;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +34,7 @@ public class TextInputInterface {
 
     public static void main(String[] args) {
 
-        List<String> commands = getLineFeedFromInput();
+        List<String> commands = getCommands(args);
 
         for (String command: commands) {
             String [] commandlineAsArray = command.trim().split(" ");
@@ -124,6 +127,23 @@ public class TextInputInterface {
 
     }
 
+
+    private static List<String> getCommands(String[] args) {
+        if (args != null && args.length > 0 && args[0] != null && !args[0].isBlank()) {
+            return readCommandsFromFile(args[0].trim());
+        }
+        return getLineFeedFromInput();
+    }
+
+    private static List<String> readCommandsFromFile(String filePath) {
+        try {
+            return Files.readAllLines(Path.of(filePath)).stream()
+                    .takeWhile(line -> !line.isEmpty())
+                    .toList();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not read commands from file: " + filePath, e);
+        }
+    }
 
     private static List<String> getLineFeedFromInput() {
 
