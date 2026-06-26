@@ -1,4 +1,4 @@
-package com.andywong.components;
+package com.andywong.domain;
 
 public class Location {
     private Integer x;

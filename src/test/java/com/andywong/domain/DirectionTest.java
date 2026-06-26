@@ -1,4 +1,4 @@
-package com.andywong.components;
+package com.andywong.domain;
 
 import org.junit.jupiter.api.Test;
 

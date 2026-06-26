@@ -1,8 +1,8 @@
 package com.andywong.application;
 
-import com.andywong.components.Direction;
-import com.andywong.components.Grid;
-import com.andywong.components.Location;
+import com.andywong.domain.Direction;
+import com.andywong.domain.Location;
+import com.andywong.domain.Table;
 
 import java.util.Optional;
 
@@ -12,15 +12,15 @@ import java.util.Optional;
  */
 public class RobotSimulator {
 
-    private final Grid grid;
+    private final Table table;
 
-    public RobotSimulator(Grid grid) {
-        this.grid = grid;
+    public RobotSimulator(Table table) {
+        this.table = table;
     }
 
     public void place(Location location, Direction direction) {
         try {
-            grid.place(location, direction);
+            table.place(location, direction);
         } catch (IllegalArgumentException e) {
             // Out-of-bounds or otherwise invalid placement — ignore per spec
         }
@@ -28,7 +28,7 @@ public class RobotSimulator {
 
     public void move() {
         try {
-            grid.move();
+            table.move();
         } catch (IllegalStateException e) {
             // Not placed or would fall off the table — ignore per spec
         }
@@ -36,7 +36,7 @@ public class RobotSimulator {
 
     public void left() {
         try {
-            grid.left();
+            table.left();
         } catch (IllegalStateException e) {
             // Not placed — ignore per spec
         }
@@ -44,7 +44,7 @@ public class RobotSimulator {
 
     public void right() {
         try {
-            grid.right();
+            table.right();
         } catch (IllegalStateException e) {
             // Not placed — ignore per spec
         }
@@ -54,7 +54,7 @@ public class RobotSimulator {
      * Returns report output when the robot is placed; empty when not placed (silent no-op).
      */
     public Optional<String> report() {
-        String result = grid.report();
+        String result = table.report();
         if ("The robot hasn't been placed".equals(result)) {
             return Optional.empty();
         }

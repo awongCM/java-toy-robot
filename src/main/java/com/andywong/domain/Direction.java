@@ -1,4 +1,4 @@
-package com.andywong.components;
+package com.andywong.domain;
 
 public enum Direction {
     NORTH(new Location(0, 1)),
@@ -38,9 +38,9 @@ public enum Direction {
         return right;
     }
 
-    public Location moveTowards(Location Location) {
-        int newX = Location.getX() + 1 * delta.getX();
-        int newY = Location.getY() + 1 * delta.getY();
+    public Location moveTowards(Location location) {
+        int newX = location.getX() + delta.getX();
+        int newY = location.getY() + delta.getY();
         return new Location(newX, newY);
     }
 

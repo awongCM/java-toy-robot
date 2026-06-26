@@ -1,10 +1,10 @@
 package com.andywong.cli;
 
 import com.andywong.application.RobotSimulator;
-import com.andywong.components.Direction;
-import com.andywong.components.Grid;
-import com.andywong.components.Location;
-import com.andywong.components.Robot;
+import com.andywong.domain.Direction;
+import com.andywong.domain.Location;
+import com.andywong.domain.Robot;
+import com.andywong.domain.Table;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +25,7 @@ public class TextInputInterface {
     private final RobotSimulator simulator;
 
     public TextInputInterface() {
-        this(new RobotSimulator(new Grid(new Robot())));
+        this(new RobotSimulator(new Table(new Robot())));
     }
 
     public TextInputInterface(RobotSimulator simulator) {

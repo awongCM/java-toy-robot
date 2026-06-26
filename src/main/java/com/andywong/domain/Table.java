@@ -1,6 +1,6 @@
-package com.andywong.components;
+package com.andywong.domain;
 
-public class Grid {
+public class Table {
 
     private static final String ROBOT_NOT_PLACED_ERROR_MESSAGE = "The robot hasn't been placed";
     private static final String ROBOT_WILL_FALL_ERROR_MESSAGE = "The robot will fall";
@@ -8,17 +8,17 @@ public class Grid {
     private static final String INVALID_LOCATION_ERROR_MESSAGE = "Location provided is invalid";
     private static final String NO_DIRECTION_ERROR_MESSAGE = "No direction is set";
 
-    private static final int GRID_HEIGHT = 5;
-    private static final int GRID_WIDTH = 5;
+    private static final int TABLE_HEIGHT = 5;
+    private static final int TABLE_WIDTH = 5;
     private static final int LOCATION_MIN_VALUE = 0;
 
     private final Robot robot;
 
-    public Grid() {
+    public Table() {
         this(new Robot());
     }
 
-    public Grid(Robot robot) {
+    public Table(Robot robot) {
         this.robot = robot;
     }
 
@@ -39,27 +39,27 @@ public class Grid {
         robot.setDirection(direction);
     }
 
-    private static boolean isValidCoordinate(Location Location) {
-        Integer x = Location.getX();
+    private static boolean isValidCoordinate(Location location) {
+        Integer x = location.getX();
         if (x == null) return false;
         if (x < LOCATION_MIN_VALUE) return false;
-        if (x >= GRID_WIDTH) return false;
+        if (x >= TABLE_WIDTH) return false;
 
-        Integer y = Location.getY();
+        Integer y = location.getY();
         if (y == null) return false;
         if (y < LOCATION_MIN_VALUE) return false;
-        if (y >= GRID_HEIGHT) return false;
+        if (y >= TABLE_HEIGHT) return false;
 
         return true;
     }
 
     public void move() {
-        if(!isRobotPlaced()){
+        if (!isRobotPlaced()) {
             throw new IllegalStateException(ROBOT_NOT_PLACED_ERROR_MESSAGE);
         }
 
         Location nextLocation = robot.getDirection().moveTowards(robot.getLocation());
-        if(!isValidCoordinate(nextLocation)){
+        if (!isValidCoordinate(nextLocation)) {
             throw new IllegalStateException(ROBOT_WILL_FALL_ERROR_MESSAGE);
         }
 
@@ -70,26 +70,24 @@ public class Grid {
         return robot.getLocation() != null;
     }
 
-    public void left(){
-        if(!isRobotPlaced()){
+    public void left() {
+        if (!isRobotPlaced()) {
             throw new IllegalStateException(ROBOT_NOT_PLACED_ERROR_MESSAGE);
         }
 
-        Direction newDirection = robot.getDirection().left();
-        robot.setDirection(newDirection);
+        robot.setDirection(robot.getDirection().left());
     }
 
-    public void right(){
-        if(!isRobotPlaced()){
+    public void right() {
+        if (!isRobotPlaced()) {
             throw new IllegalStateException(ROBOT_NOT_PLACED_ERROR_MESSAGE);
         }
 
-        Direction newDirection = robot.getDirection().right();
-        robot.setDirection(newDirection);
+        robot.setDirection(robot.getDirection().right());
     }
 
-    public String report(){
-        if(!isRobotPlaced()){
+    public String report() {
+        if (!isRobotPlaced()) {
             return ROBOT_NOT_PLACED_ERROR_MESSAGE;
         }
 

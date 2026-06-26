@@ -1,9 +1,9 @@
 package com.andywong.application;
 
-import com.andywong.components.Direction;
-import com.andywong.components.Grid;
-import com.andywong.components.Location;
-import com.andywong.components.Robot;
+import com.andywong.domain.Direction;
+import com.andywong.domain.Location;
+import com.andywong.domain.Robot;
+import com.andywong.domain.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ class RobotSimulatorTest {
 
     @BeforeEach
     void setUp() {
-        simulator = new RobotSimulator(new Grid(new Robot()));
+        simulator = new RobotSimulator(new Table(new Robot()));
     }
 
     @Test

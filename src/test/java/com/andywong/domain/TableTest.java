@@ -1,20 +1,20 @@
-package com.andywong.components;
+package com.andywong.domain;
 
-import com.andywong.components.Grid;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class GridTest {
+public class TableTest {
 
     @Test
     void place_should_throw_IllegalArgumentException_when_no_coordinate_are_set() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
 
         // Act
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> grid.place(null, null));
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> table.place(null, null));
 
         // Act
         assertEquals("No Location is set", exception.getMessage());
@@ -23,11 +23,11 @@ public class GridTest {
     @Test
     void place_should_throw_IllegalArgumentException_when_coordinate_do_not_have_x_value() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(null, 0);
 
         // Act
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> grid.place(initialCoordinates, null));
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> table.place(initialCoordinates, null));
 
         // Act
         assertEquals("Location provided is invalid", exception.getMessage());
@@ -36,11 +36,11 @@ public class GridTest {
     @Test
     void place_should_throw_IllegalArgumentException_when_coordinate_do_not_have_y_value() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(0, null);
 
         // Act
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> grid.place(initialCoordinates, null));
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> table.place(initialCoordinates, null));
 
         // Act
         assertEquals("Location provided is invalid", exception.getMessage());
@@ -49,11 +49,11 @@ public class GridTest {
     @Test
     void place_should_throw_IllegalArgumentException_when_x_is_negative() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(-1, 1);
 
         // Act
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> grid.place(initialCoordinates, null));
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> table.place(initialCoordinates, null));
 
         // Act
         assertEquals("Location provided is invalid", exception.getMessage());
@@ -62,11 +62,11 @@ public class GridTest {
     @Test
     void place_should_throw_IllegalArgumentException_when_y_is_negative() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(0, -1);
 
         // Act
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> grid.place(initialCoordinates, null));
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> table.place(initialCoordinates, null));
 
         // Act
         assertEquals("Location provided is invalid", exception.getMessage());
@@ -75,11 +75,11 @@ public class GridTest {
     @Test
     void place_should_throw_IllegalArgumentException_when_x_is_out_of_width_bounds() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(10000, 1);
 
         // Act
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> grid.place(initialCoordinates, null));
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> table.place(initialCoordinates, null));
 
         // Act
         assertEquals("Location provided is invalid", exception.getMessage());
@@ -88,11 +88,11 @@ public class GridTest {
     @Test
     void place_should_throw_IllegalArgumentException_when_y_is_out_of_height_bounds() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(1, 10000);
 
         // Act
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> grid.place(initialCoordinates, null));
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> table.place(initialCoordinates, null));
 
         // Act
         assertEquals("Location provided is invalid", exception.getMessage());
@@ -101,11 +101,11 @@ public class GridTest {
     @Test
     void place_should_throw_IllegalArgumentException_when_no_direction_is_set() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(0, 0);
 
         // Act
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> grid.place(initialCoordinates, null));
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> table.place(initialCoordinates, null));
 
         // Act
         assertEquals("No direction is set", exception.getMessage());
@@ -114,25 +114,25 @@ public class GridTest {
     @Test
     void place_should_set_Robot_to_appropriate_coordinates_and_direction() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(0, 0);
         Direction direction = Direction.EAST;
 
         // Act
-        grid.place(initialCoordinates, direction);
+        table.place(initialCoordinates, direction);
 
         // Act
-        assertEquals(grid.getRobotLocation(), initialCoordinates);
-        assertEquals(grid.getRobotDirection(), direction);
+        assertEquals(table.getRobotLocation(), initialCoordinates);
+        assertEquals(table.getRobotDirection(), direction);
     }
 
     @Test
     void move_should_throw_IllegalStateException_if_robot_has_not_been_placed() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
 
         // Act
-        Throwable exception = assertThrows(IllegalStateException.class, () -> grid.move());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> table.move());
 
         // Act
         assertEquals("The robot hasn't been placed", exception.getMessage());
@@ -141,90 +141,90 @@ public class GridTest {
     @Test
     public void move_should_throw_IllegalStateException_if_the_robot_is_facing_the_western_edge() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(0, 0);
         Direction direction = Direction.WEST;
 
         // Act
-        grid.place(initialCoordinates, direction);
-        Throwable exception = assertThrows(IllegalStateException.class, () -> grid.move());
+        table.place(initialCoordinates, direction);
+        Throwable exception = assertThrows(IllegalStateException.class, () -> table.move());
 
         // Act
         assertEquals("The robot will fall", exception.getMessage());
-        assertEquals(initialCoordinates, grid.getRobotLocation());
+        assertEquals(initialCoordinates, table.getRobotLocation());
     }
 
     @Test
     public void move_should_throw_IllegalStateException_if_the_robot_is_facing_the_southern_edge() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(0, 0);
         Direction direction = Direction.SOUTH;
 
         // Act
-        grid.place(initialCoordinates, direction);
-        Throwable exception = assertThrows(IllegalStateException.class, () -> grid.move());
+        table.place(initialCoordinates, direction);
+        Throwable exception = assertThrows(IllegalStateException.class, () -> table.move());
 
         // Act
         assertEquals("The robot will fall", exception.getMessage());
-        assertEquals(initialCoordinates, grid.getRobotLocation());
+        assertEquals(initialCoordinates, table.getRobotLocation());
     }
 
     @Test
     public void move_should_throw_IllegalStateException_if_the_robot_is_facing_the_eastern_edge() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(4, 0);
         Direction direction = Direction.EAST;
 
         // Act
-        grid.place(initialCoordinates, direction);
-        Throwable exception = assertThrows(IllegalStateException.class, () -> grid.move());
+        table.place(initialCoordinates, direction);
+        Throwable exception = assertThrows(IllegalStateException.class, () -> table.move());
 
         // Act
         assertEquals("The robot will fall", exception.getMessage());
-        assertEquals(initialCoordinates, grid.getRobotLocation());
+        assertEquals(initialCoordinates, table.getRobotLocation());
     }
 
     @Test
     public void move_should_throw_IllegalStateException_if_the_robot_is_facing_the_northern_edge() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location initialCoordinates = new Location(4, 4);
         Direction direction = Direction.NORTH;
 
         // Act
-        grid.place(initialCoordinates, direction);
-        Throwable exception = assertThrows(IllegalStateException.class, () -> grid.move());
+        table.place(initialCoordinates, direction);
+        Throwable exception = assertThrows(IllegalStateException.class, () -> table.move());
 
         // Act
         assertEquals("The robot will fall", exception.getMessage());
-        assertEquals(initialCoordinates, grid.getRobotLocation());
+        assertEquals(initialCoordinates, table.getRobotLocation());
     }
 
     @Test
     public void move_should_move_the_robot_towards_the_east_when_facing_east() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location coordinates = new Location(0, 0);
         Direction direction = Direction.EAST;
         Location expected = new Location(1, 0);
 
         // Act
-        grid.place(coordinates, direction);
-        grid.move();
+        table.place(coordinates, direction);
+        table.move();
 
         // Act
-        assertEquals(expected, grid.getRobotLocation());
+        assertEquals(expected, table.getRobotLocation());
     }
 
     @Test
     void left_should_throw_IllegalStateException_if_robot_has_not_been_placed() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
 
         // Act
-        Throwable exception = assertThrows(IllegalStateException.class, () -> grid.left());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> table.left());
 
         // Act
         assertEquals("The robot hasn't been placed", exception.getMessage());
@@ -233,27 +233,27 @@ public class GridTest {
     @Test
     public void left_should_rotate_the_robot_to_the_west_when_facing_north() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location coordinates = new Location(0, 0);
         Direction direction = Direction.NORTH;
         Direction expected = Direction.WEST;
 
         // Act
-        grid.place(coordinates, direction);
-        grid.left();
+        table.place(coordinates, direction);
+        table.left();
 
         // Act
-        assertEquals(expected, grid.getRobotDirection());
+        assertEquals(expected, table.getRobotDirection());
     }
 
 
     @Test
     void right_should_throw_IllegalStateException_if_robot_has_not_been_placed() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
 
         // Act
-        Throwable exception = assertThrows(IllegalStateException.class, () -> grid.right());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> table.right());
 
         // Act
         assertEquals("The robot hasn't been placed", exception.getMessage());
@@ -262,27 +262,27 @@ public class GridTest {
     @Test
     public void right_should_rotate_the_robot_to_the_east_when_facing_north() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location coordinates = new Location(0, 0);
         Direction direction = Direction.NORTH;
         Direction expected = Direction.EAST;
 
         // Act
-        grid.place(coordinates, direction);
-        grid.right();
+        table.place(coordinates, direction);
+        table.right();
 
         // Act
-        assertEquals(expected, grid.getRobotDirection());
+        assertEquals(expected, table.getRobotDirection());
     }
 
 
     @Test
     void report_should_return_message_if_robot_has_not_been_placed() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
 
         // Act
-        String actual = grid.report();
+        String actual = table.report();
 
         // Act
         assertEquals("The robot hasn't been placed", actual);
@@ -291,14 +291,14 @@ public class GridTest {
     @Test
     void report_should_return_robot_position_and_facing_direction() {
         // Arrange
-        Grid grid = new Grid();
+        Table table = new Table();
         Location coordinates = new Location(0, 0);
         Direction direction = Direction.NORTH;
         String expected = "0,0,NORTH";
 
         // Act
-        grid.place(coordinates, direction);
-        String actual = grid.report();
+        table.place(coordinates, direction);
+        String actual = table.report();
 
         // Act
         assertEquals(expected, actual);
