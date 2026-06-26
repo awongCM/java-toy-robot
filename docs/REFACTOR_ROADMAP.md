@@ -61,29 +61,30 @@ Phase 1 intentionally did **not** change:
 
 ## Phase 2 — Spec-aligned behavior
 
-**Status:** Pending
+**Status:** In progress (slice 3a: behavior — PR pending)
 
 **Goal:** Align runtime behavior with the [Robot Challenge spec](https://github.com/luke-zhou/robot-challenge) and add confidence through integration tests and file input.
 
 ### Planned items
 
-- [ ] **Ignore commands before first valid `PLACE`**
+- [x] **Ignore commands before first valid `PLACE`** (slice 3a)
   - `MOVE`, `LEFT`, `RIGHT`, and `REPORT` should be no-ops until the robot is placed
-  - Currently throws `IllegalStateException("The robot hasn't been placed")`
+  - Implemented via `RobotSimulator` — catches `IllegalStateException` from `Grid`
 
-- [ ] **Ignore moves that would fall off the table**
+- [x] **Ignore moves that would fall off the table** (slice 3a)
   - Invalid moves should be silently ignored; robot position unchanged
-  - Currently throws `IllegalStateException("The robot will fall")`
+  - Implemented via `RobotSimulator`
 
-- [ ] **Ignore invalid `PLACE` commands**
+- [x] **Ignore invalid `PLACE` commands** (slice 3a)
   - Out-of-bounds or malformed placement should be ignored (not throw)
   - Valid `PLACE` after an invalid one should still work
+  - Parser-level malformed input still throws; out-of-bounds ignored by simulator
 
-- [ ] **Update existing tests** to reflect spec-aligned behavior
-  - Replace exception assertions with state assertions (position/direction unchanged)
-  - Keep tests for truly invalid input parsing (malformed CLI strings)
+- [x] **Update existing tests** to reflect spec-aligned behavior (slice 3a)
+  - `RobotSimulatorTest` and updated `TextInputInterfaceTest`
+  - `GridTest` unchanged — domain layer still throws internally
 
-- [ ] **Add canonical integration tests** for the three official examples:
+- [ ] **Add canonical integration tests** for the three official examples (slice 3b):
 
   | Input | Expected output |
   |-------|-----------------|
@@ -91,14 +92,13 @@ Phase 1 intentionally did **not** change:
   | `PLACE 0,0,NORTH` → `LEFT` → `REPORT` | `0,0,WEST` |
   | `PLACE 1,2,EAST` → `MOVE` → `MOVE` → `LEFT` → `MOVE` → `REPORT` | `3,3,NORTH` |
 
-- [ ] **Support file-based input**
+- [ ] **Support file-based input** (slice 3c)
   - Read commands from a file path argument (e.g. `commands.txt`)
   - Fall back to stdin when no file is provided
   - Example: `mvn compile exec:java -Dexec.args="commands.txt"`
 
-- [ ] **Clarify `REPORT` when robot is not placed**
-  - Spec allows ignoring `REPORT` before placement
-  - Decide: silent no-op vs. empty output (document the choice)
+- [x] **Clarify `REPORT` when robot is not placed** (slice 3a)
+  - Silent no-op: `RobotSimulator.report()` returns empty; CLI prints nothing
 
 ### Suggested approach
 
