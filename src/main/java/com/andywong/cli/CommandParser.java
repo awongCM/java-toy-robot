@@ -23,6 +23,9 @@ public final class CommandParser {
         }
 
         Command command = Command.matchAndReturnValidCommand(commandToken);
+        if (command == null) {
+            throw new CommandParseException("Unknown command: " + commandToken);
+        }
         return new ParsedCommand(command, placeParameters);
     }
 }

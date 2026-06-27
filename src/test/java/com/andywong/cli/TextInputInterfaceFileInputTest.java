@@ -71,8 +71,8 @@ class TextInputInterfaceFileInputTest {
 
     @Test
     void main_throwsWhenFileDoesNotExist() {
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
+        CommandParseException ex = assertThrows(
+                CommandParseException.class,
                 () -> TextInputInterface.main(new String[]{"nonexistent-commands.txt"})
         );
         assertEquals("Could not read commands from file: nonexistent-commands.txt", ex.getMessage());

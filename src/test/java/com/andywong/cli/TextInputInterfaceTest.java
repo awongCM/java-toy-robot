@@ -50,7 +50,7 @@ public class TextInputInterfaceTest {
     void runCommand_throw_exception_when_PLACE_has_no_parameters() {
         String expected = "The PLACE command must have three parameters: X,Y,DIRECTION";
 
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> textInputInterface.runCommand("PLACE"));
+        Throwable exception = assertThrows(CommandParseException.class, () -> textInputInterface.runCommand("PLACE"));
 
         assertEquals(expected, exception.getMessage());
     }
@@ -59,7 +59,7 @@ public class TextInputInterfaceTest {
     void runCommand_throw_exception_when_PLACE_has_invalid_number_of_arguments() {
         String expected = "The PLACE command must have three parameters: X,Y,DIRECTION";
 
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> textInputInterface.runCommand("PLACE a,b"));
+        Throwable exception = assertThrows(CommandParseException.class, () -> textInputInterface.runCommand("PLACE a,b"));
 
         assertEquals(expected, exception.getMessage());
     }
@@ -68,7 +68,7 @@ public class TextInputInterfaceTest {
     void runCommand_throw_exception_when_PLACE_has_invalid_coordinate_params() {
         String expected = "Location must be integers";
 
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> textInputInterface.runCommand("PLACE a,b,c"));
+        Throwable exception = assertThrows(CommandParseException.class, () -> textInputInterface.runCommand("PLACE a,b,c"));
 
         assertEquals(expected, exception.getMessage());
     }

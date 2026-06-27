@@ -211,9 +211,9 @@ mvn test
 
 ### Planned items
 
-- [ ] **Custom exceptions** (only where fail-fast is genuinely desired)
-  - Separate parsing errors from domain no-ops
-  - Document which layer throws vs. ignores
+- [x] **Custom exceptions** (slice 4c)
+  - `CommandParseException` for CLI/parsing errors
+  - Document which layer throws vs. ignores — [ERROR_HANDLING.md](ERROR_HANDLING.md)
 
 - [ ] **Parameterized tests** for edge cases
   - All four table edges (north, south, east, west)
@@ -231,9 +231,9 @@ mvn test
   - Link to roadmap and historical notes
 
 - [ ] **Code quality**
-  - Remove dead code and commented-out blocks
+  - [x] Remove dead code in `Command.matchAndReturnValidCommand`
   - Consistent naming (`Grid` → `Table` references in docs)
-  - Consider records for `Position` (Java 21)
+  - ~~Consider records for `Position` (Java 21)~~ — done in Phase 3
 
 ### Acceptance criteria
 
@@ -264,6 +264,7 @@ flowchart LR
 |----------|---------|
 | [HISTORICAL_NOTES.md](HISTORICAL_NOTES.md) | Why the app failed before Phase 1 |
 | [../README.md](../README.md) | How to run the app and tests today |
+| [ERROR_HANDLING.md](ERROR_HANDLING.md) | CLI vs application vs domain error contract |
 | [Robot Challenge spec](https://github.com/luke-zhou/robot-challenge) | Official challenge requirements |
 
 ---

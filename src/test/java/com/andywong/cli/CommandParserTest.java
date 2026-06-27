@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CommandParserTest {
 
@@ -29,5 +30,14 @@ class CommandParserTest {
 
         assertEquals(Command.REPORT, parsed.command());
         assertNull(parsed.placeParameters());
+    }
+
+    @Test
+    void parse_unknownCommand_throws() {
+        CommandParseException ex = assertThrows(
+                CommandParseException.class,
+                () -> CommandParser.parse("JUMP")
+        );
+        assertEquals("Unknown command: JUMP", ex.getMessage());
     }
 }

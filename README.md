@@ -37,3 +37,4 @@ mvn test
 
 - [Refactor roadmap](docs/REFACTOR_ROADMAP.md) — phased plan (Phase 1 done; Phases 2–4 pending)
 - [Historical notes](docs/HISTORICAL_NOTES.md) — why the app and test suite were unreliable before Phase 1
+- [Error handling](docs/ERROR_HANDLING.md) — which layers throw vs. ignore
