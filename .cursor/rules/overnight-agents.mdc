@@ -1,0 +1,14 @@
+---
+description: Safety rails for overnight Cloud Agent runs on this repo
+alwaysApply: true
+---
+
+# Overnight agent constraints
+
+- Work on feature branches only (`overnight/*` or `agent/*`). Never push directly to `main`.
+- Do not merge pull requests. Do not force-push.
+- Run `mvn test` before opening a PR; all 78 JUnit tests must pass.
+- Change at most 5 files per run unless the user explicitly widens scope.
+- Do not modify `.github/workflows/`, secrets, credentials, or dependency major versions without explicit approval.
+- Do not run destructive commands (`rm -rf`, `git reset --hard`, `git push --force`).
+- If blocked (ambiguous spec, failing environment, flaky tests), stop and leave a clear summary instead of guessing.

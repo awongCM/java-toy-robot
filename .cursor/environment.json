@@ -1,0 +1,4 @@
+{
+  "install": "mvn -q -B dependency:resolve",
+  "start": "mvn -q -B test"
+}
