@@ -13,7 +13,7 @@ For background on **why** Phase 1 was needed, see [HISTORICAL_NOTES.md](HISTORIC
 | [Phase 1](#phase-1--quick-wins) | Build tooling, parsing, test isolation | **Done** |
 | [Phase 2](#phase-2--spec-aligned-behavior) | Challenge spec compliance, integration tests, file input | **Done** |
 | [Phase 3](#phase-3--clean-architecture) | Remove singletons, separate concerns, domain cleanup | **Done** |
-| [Phase 4](#phase-4--polish) | Optional hardening, CI, edge-case coverage | Pending |
+| [Phase 4](#phase-4--polish) | Optional hardening, CI, edge-case coverage | **In progress** |
 
 **Recommended order:** Phase 1 → Phase 2 → Phase 3 → Phase 4 (optional).
 
@@ -205,35 +205,35 @@ mvn test
 
 ## Phase 4 — Polish
 
-**Status:** Pending (optional)
+**Status:** In progress
 
 **Goal:** Harden the project for long-term maintenance and demonstration.
 
 ### Planned items
 
-- [ ] **Custom exceptions** (only where fail-fast is genuinely desired)
+- [ ] **Custom exceptions** (only where fail-fast is genuinely desired) — slice 4c
   - Separate parsing errors from domain no-ops
   - Document which layer throws vs. ignores
 
-- [ ] **Parameterized tests** for edge cases
+- [x] **Parameterized tests** for edge cases — slice 4b
   - All four table edges (north, south, east, west)
   - Corner positions
   - Multiple consecutive invalid moves
   - Re-`PLACE` mid-session
 
-- [ ] **CI pipeline**
-  - GitHub Actions (or similar) running `mvn test` on push/PR
-  - Optionally: Java version matrix (21)
+- [x] **CI pipeline** — slice 4a
+  - GitHub Actions running `mvn test` on push/PR
+  - Java 21 (Temurin)
 
-- [ ] **README polish**
+- [x] **README polish** — slice 4d
   - Architecture diagram
   - Example file-input usage
   - Link to roadmap and historical notes
+  - CI badge
 
 - [ ] **Code quality**
   - Remove dead code and commented-out blocks
-  - Consistent naming (`Grid` → `Table` references in docs)
-  - Consider records for `Position` (Java 21)
+  - ~~Consider records for `Position` (Java 21)~~ — done in Phase 3
 
 ### Acceptance criteria
 
@@ -270,8 +270,6 @@ flowchart LR
 
 ## Notes for contributors
 
-- **Prefer incremental PRs** — one phase (or a logical slice of a phase) per PR
-- **Keep tests green** — update assertions when behavior intentionally changes (especially Phase 2)
-- **Phase 2 is complete** — integration tests are the behavior contract during Phase 3
-- **Slice 3a removed singletons** — `resetForTesting()` is gone; use fresh instances per test
-- **Next slices:** 3b (package moves), then 3c/3d in parallel, then 3e
+- **Phase 1–3 are complete** — integration tests are the behavior contract
+- **Phase 4 in progress** — CI (4a), edge-case tests (4b), README (4d), exceptions (4c)
+- **Prefer incremental PRs** — one slice per PR; keep `mvn test` green
