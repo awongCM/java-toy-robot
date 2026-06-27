@@ -12,7 +12,7 @@ For background on **why** Phase 1 was needed, see [HISTORICAL_NOTES.md](HISTORIC
 |-------|-------|--------|
 | [Phase 1](#phase-1--quick-wins) | Build tooling, parsing, test isolation | **Done** |
 | [Phase 2](#phase-2--spec-aligned-behavior) | Challenge spec compliance, integration tests, file input | **Done** |
-| [Phase 3](#phase-3--clean-architecture) | Remove singletons, separate concerns, domain cleanup | **In progress** (slice 3a done) |
+| [Phase 3](#phase-3--clean-architecture) | Remove singletons, separate concerns, domain cleanup | **Done** |
 | [Phase 4](#phase-4--polish) | Optional hardening, CI, edge-case coverage | Pending |
 
 **Recommended order:** Phase 1 → Phase 2 → Phase 3 → Phase 4 (optional).
@@ -115,7 +115,7 @@ Introduce a thin **simulator/orchestrator** layer that interprets commands accor
 
 ## Phase 3 — Clean architecture
 
-**Status:** In progress (slice 3a done — PR pending)
+**Status:** Done (slices 3a–3e via PRs #8–#12)
 
 **Goal:** Restructure the codebase for maintainability, testability, and interview/portfolio quality — without singletons or mixed responsibilities.
 
@@ -124,45 +124,50 @@ Introduce a thin **simulator/orchestrator** layer that interprets commands accor
 | Slice | Focus | Status |
 |-------|-------|--------|
 | **3a** | Remove singletons; constructor injection | **Done** |
-| **3b** | Move classes to `domain/`, `application/`, `cli/` packages | Pending |
-| **3c** | Domain cleanup (`Position`, `int` coords, `hashCode`, table size) | Pending |
-| **3d** | Extract `CommandParser`; remove `Arrays.toString()` round-trip | Pending |
-| **3e** | Reorganize tests to mirror packages | Pending |
+| **3b** | Move classes to `domain/`, `application/`, `cli/` packages | **Done** |
+| **3c** | Domain cleanup (`Position`, `int` coords, `hashCode`, table size) | **Done** |
+| **3d** | Extract `CommandParser`; remove `Arrays.toString()` round-trip | **Done** |
+| **3e** | Reorganize tests to mirror packages | **Done** |
 
 ### Planned items
 
 #### Remove singletons (slice 3a)
 
 - [x] Remove `Robot.getInstance()` and `Grid.getInstance()`
-- [x] Use constructor injection: `new Grid(new Robot())`
+- [x] Use constructor injection: `new Table(new Robot())`
 - [x] Remove `resetForTesting()` workarounds (no longer needed)
 - [x] Each test creates a fresh simulator/table instance
 
 #### Separate concerns
 
-- [ ] **Domain layer** — pure logic, no I/O
+- [x] **Domain layer** — pure logic, no I/O
   - `Direction` (enum)
   - `Position` (rename from `Location`)
   - `Robot` (state holder)
   - `Table` (rename from `Grid`; bounds + place/move/rotate)
 
-- [ ] **Application layer** — command orchestration
+- [x] **Application layer** — command orchestration
   - `RobotSimulator` applies parsed commands and returns optional report output
 
-- [ ] **CLI layer** — parsing and printing only
+- [x] **CLI layer** — parsing and printing only
   - `Command` (enum)
   - `CommandParser` (string → typed command)
   - `App` / `TextInputInterface` (stdin or file input)
 
 #### Domain cleanup
 
-- [ ] Rename `Location` → `Position`
-- [ ] Use `int` for x/y instead of `Integer` (eliminate null-coordinate guards)
-- [ ] Fix `Location.hashCode()` to match `equals()` (currently uses `super.hashCode()`)
-- [ ] Make table size injectable/configurable (default 5×5)
-- [ ] Remove awkward `Arrays.toString()` round-trip in command parameter handling
+- [x] Rename `Location` → `Position`
+- [x] Use `int` for x/y instead of `Integer` (eliminate null-coordinate guards)
+- [x] Fix `Position.hashCode()` to match `equals()` (Java record)
+- [x] Make table size injectable/configurable (default 5×5)
+- [x] Remove awkward `Arrays.toString()` round-trip in command parameter handling (slice 3d)
 
-#### Target package layout
+#### Test reorganization (slice 3e)
+
+- [x] Mirror package structure in test directory
+- [x] Unit tests for domain (`domain/TableTest`, `domain/DirectionTest`)
+- [x] Integration tests for simulator (`application/RobotSimulatorIntegrationTest`)
+- [x] Thin CLI tests (`cli/CommandParserTest`, `cli/TextInputInterfaceTest`, file-input smoke tests)
 
 ```
 com.andywong
@@ -180,19 +185,21 @@ com.andywong
 └── (tests mirror the above)
 ```
 
-#### Test reorganization
-
-- [ ] Mirror package structure in test directory
-- [ ] Unit tests for domain (no CLI dependencies)
-- [ ] Integration tests for simulator + canonical examples
-- [ ] Thin CLI smoke tests only
-
 ### Acceptance criteria
 
-- No static mutable singleton state
-- Domain classes have zero imports from CLI or `System.out`
-- All Phase 2 integration tests still pass
-- `mvn test` green with improved test isolation (no `@BeforeEach` reset hacks)
+- [x] No static mutable singleton state
+- [x] Domain classes have zero imports from CLI or `System.out`
+- [x] All Phase 2 integration tests still pass
+- [x] `mvn test` green with improved test isolation (59 tests)
+
+### Verification
+
+```bash
+mvn test
+# Tests run: 59, Failures: 0, Errors: 0, Skipped: 0
+```
+
+#### Target package layout
 
 ---
 
