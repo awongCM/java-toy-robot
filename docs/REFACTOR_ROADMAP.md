@@ -13,7 +13,7 @@ For background on **why** Phase 1 was needed, see [HISTORICAL_NOTES.md](HISTORIC
 | [Phase 1](#phase-1--quick-wins) | Build tooling, parsing, test isolation | **Done** |
 | [Phase 2](#phase-2--spec-aligned-behavior) | Challenge spec compliance, integration tests, file input | **Done** |
 | [Phase 3](#phase-3--clean-architecture) | Remove singletons, separate concerns, domain cleanup | **Done** |
-| [Phase 4](#phase-4--polish) | Optional hardening, CI, edge-case coverage | **In progress** |
+| [Phase 4](#phase-4--polish) | Optional hardening, CI, edge-case coverage | **Done** |
 
 **Recommended order:** Phase 1 → Phase 2 → Phase 3 → Phase 4 (optional).
 
@@ -205,15 +205,15 @@ mvn test
 
 ## Phase 4 — Polish
 
-**Status:** In progress
+**Status:** Done
 
 **Goal:** Harden the project for long-term maintenance and demonstration.
 
 ### Planned items
 
-- [ ] **Custom exceptions** (only where fail-fast is genuinely desired) — slice 4c
-  - Separate parsing errors from domain no-ops
-  - Document which layer throws vs. ignores
+- [x] **Custom exceptions** (slice 4c)
+  - `CommandParseException` for CLI/parsing errors
+  - Document which layer throws vs. ignores — [ERROR_HANDLING.md](ERROR_HANDLING.md)
 
 - [x] **Parameterized tests** for edge cases — slice 4b
   - All four table edges (north, south, east, west)
@@ -231,8 +231,8 @@ mvn test
   - Link to roadmap and historical notes
   - CI badge
 
-- [ ] **Code quality**
-  - Remove dead code and commented-out blocks
+- [x] **Code quality**
+  - [x] Remove dead code in `Command.matchAndReturnValidCommand`
   - ~~Consider records for `Position` (Java 21)~~ — done in Phase 3
 
 ### Acceptance criteria
@@ -264,12 +264,12 @@ flowchart LR
 |----------|---------|
 | [HISTORICAL_NOTES.md](HISTORICAL_NOTES.md) | Why the app failed before Phase 1 |
 | [../README.md](../README.md) | How to run the app and tests today |
+| [ERROR_HANDLING.md](ERROR_HANDLING.md) | CLI vs application vs domain error contract |
 | [Robot Challenge spec](https://github.com/luke-zhou/robot-challenge) | Official challenge requirements |
 
 ---
 
 ## Notes for contributors
 
-- **Phase 1–3 are complete** — integration tests are the behavior contract
-- **Phase 4 in progress** — CI (4a), edge-case tests (4b), README (4d), exceptions (4c)
+- **Phases 1–4 are complete** — 78 tests; integration tests are the behavior contract
 - **Prefer incremental PRs** — one slice per PR; keep `mvn test` green

@@ -68,20 +68,20 @@ public class TextInputInterface {
                 reportRobotPosition();
                 break;
             default:
-                throw new RuntimeException("unknown command detected");
+                throw new CommandParseException("Unknown command detected");
         }
     }
 
     private void placePosition(String paramsAsString) {
 
         if (paramsAsString == null || paramsAsString.isBlank()) {
-            throw new IllegalArgumentException(INVALID_PLACE_PARAMETERS);
+            throw new CommandParseException(INVALID_PLACE_PARAMETERS);
         }
 
         String[] locationParams = paramsAsString.split(",");
 
         if (locationParams.length != 3) {
-            throw new IllegalArgumentException(INVALID_PLACE_PARAMETERS);
+            throw new CommandParseException(INVALID_PLACE_PARAMETERS);
         }
 
         for (int i = 0; i < locationParams.length; i++) {
@@ -104,8 +104,8 @@ public class TextInputInterface {
         try{
             x = Integer.parseInt(params[X_POSITION]);
             y = Integer.parseInt(params[Y_POSITION]);
-        }catch(NumberFormatException e) {
-            throw new IllegalArgumentException(INVALID_LOCATION_PARAMETERS);
+        } catch (NumberFormatException e) {
+            throw new CommandParseException(INVALID_LOCATION_PARAMETERS);
         }
 
         return new Position(x, y);
@@ -125,7 +125,7 @@ public class TextInputInterface {
                     .takeWhile(line -> !line.isEmpty())
                     .toList();
         } catch (IOException e) {
-            throw new IllegalArgumentException("Could not read commands from file: " + filePath, e);
+            throw new CommandParseException("Could not read commands from file: " + filePath, e);
         }
     }
 

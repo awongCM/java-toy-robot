@@ -40,7 +40,7 @@ The file is read line-by-line until the first blank line (same rule as stdin). I
 
 ```bash
 mvn test
-# Tests run: 77, Failures: 0, Errors: 0, Skipped: 0
+# Tests run: 78, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 ## Architecture
@@ -72,16 +72,16 @@ Phases are tracked in [docs/REFACTOR_ROADMAP.md](docs/REFACTOR_ROADMAP.md). Summ
 | **1** | Build tooling, parsing, test isolation | **Done** — [PR #2](https://github.com/awongCM/java-toy-robot/pull/2) |
 | **2** | Spec-aligned behavior, integration tests, file input | **Done** — [PRs #4–#6](https://github.com/awongCM/java-toy-robot/pull/6) |
 | **3** | Clean architecture (no singletons, layered packages) | **Done** — [PRs #8–#12](https://github.com/awongCM/java-toy-robot/pull/12) |
-| **4** | Polish (CI, edge-case tests, hardening) | **In progress** — [PRs #14+](https://github.com/awongCM/java-toy-robot/pull/14) |
+| **4** | Polish (CI, edge-case tests, hardening) | **Done** — [PRs #14–#17](https://github.com/awongCM/java-toy-robot/pull/17) |
 
-### Phase 4 — Polish (in progress)
+### Phase 4 — Polish
 
 | Slice | Change |
 |-------|--------|
 | 4a | GitHub Actions CI (`mvn test` on push/PR) |
 | 4b | Parameterized edge-case tests (edges, corners, re-`PLACE`) |
 | 4d | README polish and CI badge |
-| 4c | CLI parse exceptions and error-handling docs |
+| 4c | `CommandParseException` and [error-handling docs](docs/ERROR_HANDLING.md) |
 
 ## Environment
 
@@ -93,5 +93,6 @@ Phases are tracked in [docs/REFACTOR_ROADMAP.md](docs/REFACTOR_ROADMAP.md). Summ
 
 - [Refactor roadmap](docs/REFACTOR_ROADMAP.md) — full phase plan and acceptance criteria
 - [Historical notes](docs/HISTORICAL_NOTES.md) — pre–Phase 1 issues and root causes
+- [Error handling](docs/ERROR_HANDLING.md) — which layers throw vs. ignore
 - [AGENTS.md](AGENTS.md) — notes for cloud agents (stdin, main class, test count)
 - [Robot Challenge spec](https://github.com/luke-zhou/robot-challenge) — official requirements
