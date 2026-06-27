@@ -205,7 +205,7 @@ mvn test
 
 ## Phase 4 — Polish
 
-**Status:** Pending (optional)
+**Status:** Pending (next)
 
 **Goal:** Harden the project for long-term maintenance and demonstration.
 
@@ -225,15 +225,16 @@ mvn test
   - GitHub Actions (or similar) running `mvn test` on push/PR
   - Optionally: Java version matrix (21)
 
-- [ ] **README polish**
-  - Architecture diagram
-  - Example file-input usage
-  - Link to roadmap and historical notes
+- [x] **README polish** (partial — see [README](../README.md))
+  - [x] Architecture diagram
+  - [x] Example file-input usage
+  - [x] Link to roadmap and historical notes
+  - [ ] CI badge once workflow exists
 
 - [ ] **Code quality**
   - Remove dead code and commented-out blocks
   - Consistent naming (`Grid` → `Table` references in docs)
-  - Consider records for `Position` (Java 21)
+  - ~~Consider records for `Position` (Java 21)~~ — done in Phase 3
 
 ### Acceptance criteria
 
@@ -270,8 +271,6 @@ flowchart LR
 
 ## Notes for contributors
 
-- **Prefer incremental PRs** — one phase (or a logical slice of a phase) per PR
-- **Keep tests green** — update assertions when behavior intentionally changes (especially Phase 2)
-- **Phase 2 is complete** — integration tests are the behavior contract during Phase 3
-- **Slice 3a removed singletons** — `resetForTesting()` is gone; use fresh instances per test
-- **Next slices:** 3b (package moves), then 3c/3d in parallel, then 3e
+- **Phase 1–3 are complete** — 59 tests; integration tests are the behavior contract
+- **Phase 4 is next** — CI, edge-case coverage, optional hardening
+- **Prefer incremental PRs** — one phase (or slice) per PR; keep `mvn test` green
