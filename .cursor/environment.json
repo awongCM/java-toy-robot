@@ -1,4 +1,4 @@
 {
-  "install": "mvn -q -B dependency:resolve",
+  "install": "mvn -q -B dependency:resolve test-compile",
   "start": "mvn -q -B test"
 }
